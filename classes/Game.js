@@ -1,6 +1,9 @@
+const crypto = require('crypto');
+
 const Team = require('./Team');
 
 module.exports = class Game {
+	id = crypto.randomUUID();
 	name = null;
 	teams = null;
 
@@ -37,6 +40,18 @@ module.exports = class Game {
 			new Team(teamNames[0]),
 			new Team(teamNames[1]),
 		];
+	}
+
+	getId() {
+		return this.id;
+	}
+
+	getName() {
+		return this.name;
+	}
+
+	getTeams() {
+		return this.teams;
 	}
 
 	getTeamIndexById(id) {
