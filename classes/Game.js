@@ -10,6 +10,8 @@ module.exports = class Game {
 	bans = [[], []];
 	picks = [[], []];
 
+	ready = [false, false];
+
 	order = [
 		[0, 'ban'],
 		[1, 'ban'],
@@ -31,6 +33,7 @@ module.exports = class Game {
 		[0, 'pick'],
 		[0, 'pick'],
 		[1, 'pick'],
+		[null, 'done'],
 	];
 	current = 0;
 
@@ -46,8 +49,20 @@ module.exports = class Game {
 		return this.id;
 	}
 
-	getName() {
-		return this.name;
+	getState() {
+		return {
+			id: this.id,
+			name: this.name,
+
+			ready: this.ready,
+			bans: this.bans,
+			picks: this.picks,
+
+			order: this.order,
+			current: this.current,
+
+			teams: this.teams.map(team => ({ name: team.getName() })),
+		};
 	}
 
 	getTeams() {
@@ -55,9 +70,9 @@ module.exports = class Game {
 	}
 
 	getTeamIndexById(id) {
-		for(let team of this.teams) {
-			if(team.getId() === id) {
-				return team;
+		for(let index = 0; index < this.teams.length; ++index) {
+			if(this.teams[index].getId() === id) {
+				return index;
 			}
 		}
 
@@ -71,25 +86,40 @@ module.exports = class Game {
 	}
 
 	canAct(id, action) {
+		const teamIndex = this.getTeamIndexById(id);
+
+		if(teamIndex === null) {
+			return false;
+		}
+
+		if(this.current === 0 && action === 'ready') {
+			return true;
+		}
+
 		const currentRound = this.order[this.current];
 
-		const teamIndex = this.getTeamIndexById(id);
-		const team = this.getTeamById(id);
-
-		return team !== null && currentRound[0] === teamIndex && currentRound[1] === action;
+		return currentRound[0] === teamIndex && currentRound[1] === action;
 	}
 
 	act(id, action, championId) {
 		if(!this.canAct(id, action)) {
-			return;
+			return false;
 		}
 
 		const teamIndex = this.getTeamIndexById(id);
 
 		if(action === 'ban') {
 			this.bans[teamIndex].push(championId);
+
+			++this.current;
 		} else if(action === 'pick') {
 			this.picks[teamIndex].push(championId);
+
+			++this.current;
+		} else if(action === 'ready') {
+			this.ready[teamIndex] = true;
 		}
+
+		return true;
 	}
 };

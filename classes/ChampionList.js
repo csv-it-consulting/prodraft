@@ -19,7 +19,7 @@ module.exports = class ChampionList {
 					height: champion.image.h,
 				};
 
-				return new Champion(champion.id, champion.name, champion.splash, sprite);
+				return new Champion(champion.version, champion.id, champion.name, champion.splash, sprite, champion.tags);
 			}));
 	}
 

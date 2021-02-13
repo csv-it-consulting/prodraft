@@ -1,5 +1,10 @@
 <template>
-	<div class="modal d-block">
+	<div class="h-100 w-100" v-if="hasGame">
+		<div class="container-xl h-100">
+			<game></game>
+		</div>
+	</div>
+	<div class="modal d-block" v-else>
 		<div class="modal-dialog">
 			<form class="modal-content" @submit.prevent="create" v-if="status === 'creating'">
 				<div class="modal-header">
@@ -7,16 +12,16 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="blueName">Match Name</label>
-						<input type="text" class="form-control" id="name" v-model="input.name">
+						<label for="name">Match Name</label>
+						<input type="text" class="form-control bg-secondary text-white" id="name" v-model="input.name">
 					</div>
 					<div class="form-group">
-						<label for="blueName">Blue Team Name</label>
-						<input type="text" class="form-control bg-info" id="blueName" v-model="input.teams[0]">
+						<label for="blue-name">Blue Team Name</label>
+						<input type="text" class="form-control bg-info text-white" id="blue-name" v-model="input.teams[0]">
 					</div>
 					<div class="form-group">
-						<label for="blueName">Red Team Name</label>
-						<input type="text" class="form-control bg-danger" id="redName" v-model="input.teams[1]">
+						<label for="red-name">Red Team Name</label>
+						<input type="text" class="form-control bg-danger text-white" id="red-name" v-model="input.teams[1]">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -26,24 +31,79 @@
 			<div class="modal-content" v-else>
 				<div class="modal-body" v-if="status === 'loading'">Creating draft...</div>
 				<div class="modal-body" v-else-if="status === 'error'">Failed to create draft.</div>
-				<div class="modal-body" v-else-if="status === 'complete'">DATA HERE</div>
+				<div class="modal-body" v-else-if="status === 'complete'">
+					<div class="form-group">
+						<label for="spectate-link">Spectate Link</label>
+						<div class="input-group">
+							<input class="form-control bg-secondary border-0 text-white" :value="links.spectate" readonly id="spectate-link">
+							<div class="input-group-append">
+								<button type="button" class="btn btn-outline-secondary text-white" data-clipboard-target="#spectate-link">Copy</button>
+								<a :href="links.spectate" target="_blank" class="btn btn-outline-secondary text-white">Go</a>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="blue-link">Blue Captain Link</label>
+						<div class="input-group">
+							<input class="form-control bg-info border-0 text-white" :value="links.teams[0]" readonly id="blue-link">
+							<div class="input-group-append">
+								<button type="button" class="btn btn-outline-info text-white" data-clipboard-target="#blue-link">Copy</button>
+								<a :href="links.teams[0]" target="_blank" class="btn btn-outline-info text-white">Go</a>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="red-link">Red Captain Link</label>
+						<div class="input-group">
+							<input class="form-control bg-danger border-0 text-white" :value="links.teams[1]" readonly id="red-link">
+							<div class="input-group-append">
+								<button type="button" class="btn btn-outline-danger text-white" data-clipboard-target="#red-link">Copy</button>
+								<a :href="links.teams[1]" target="_blank" class="btn btn-outline-danger text-white">Go</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
+import Clipboard from 'clipboard';
 import axios from 'axios';
+import qs from 'qs';
+import Game from './Game';
 
 export default {
+	components: { Game },
+
 	computed: {
 		canCreate() {
 			return this.input.name && this.input.teams[0] && this.input.teams[1];
 		},
 	},
 
+	created() {
+		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+
+		if(query.game) {
+			this.hasGame = true;
+		} else {
+			this.status = 'creating';
+		}
+	},
+
 	data() {
 		return {
-			status: 'creating',
+			hasGame: false,
+			status: 'starting',
+
+			links: {
+				spectate: null,
+				teams: [
+					null,
+					null,
+				],
+			},
 
 			input: {
 				name: '',
@@ -57,9 +117,22 @@ export default {
 			this.status = 'loading';
 
 			axios.post('game', this.input)
-				.then(console.log)
+				.then(response => {
+					const game = response.data.game;
+					const teams = response.data.teams;
+
+					this.links.spectate = window.location.origin + qs.stringify({ game }, { addQueryPrefix: true });
+					this.links.teams[0] = window.location.origin + qs.stringify({ game, team: teams[0] }, { addQueryPrefix: true });
+					this.links.teams[1] = window.location.origin + qs.stringify({ game, team: teams[1] }, { addQueryPrefix: true });
+
+					this.status = 'complete';
+				})
 				.catch(() => this.status = 'error');
 		},
+	},
+
+	mounted() {
+		new Clipboard('[data-clipboard-target]');
 	},
 };
 </script>

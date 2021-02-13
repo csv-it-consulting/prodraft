@@ -35,14 +35,43 @@ function createGame(req, res) {
 	}
 
 	const game = new Game(input.name, input.teams);
+	const teams = game.getTeams();
 
-	for(let team of game.getTeams()) {
-		global.games[team.getId()] = game;
-	}
+	global.games[game.getId()] = game;
 
-	res.send('test');
+	res.send({
+		game: game.getId(),
+		teams: teams.map(team => team.getId()),
+	});
 }
 
-function attemptAct() {}
+function onJoinGame(io, socket) {
+	const game = global.games[socket.handshake.query.game];
 
-createServer(createGame, attemptAct);
+	if(game === undefined) {
+		socket.disconnect(true);
+
+		return;
+	}
+
+	socket.emit('game-state', game.getState());
+	socket.emit('champions', ChampionList.get());
+	socket.join(`game.${game.getId()}`);
+}
+
+function onGameAction(io, socket, data) {
+	const game = global.games[socket.handshake.query.game];
+
+	if(game === undefined) {
+		socket.disconnect(true);
+
+		return;
+	}
+
+	const success = game.act(socket.handshake.query.team, data.action, data.champion);
+	const recipient = success ? io.to(`game.${game.getId()}`) : socket;
+
+	recipient.emit('game-state', game.getState());
+}
+
+createServer(createGame, onJoinGame, onGameAction);
