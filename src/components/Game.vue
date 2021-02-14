@@ -179,7 +179,7 @@ export default {
 
 		startTimer() {
 			const updateTimer = () => {
-				let displaySeconds = Math.floor((this.state.roundExpiration - Number(dayjs()) - this.timerOffset) / 1000) - 3;
+				let displaySeconds = Math.floor((this.state.roundExpiration - Number(dayjs()) + this.timerOffset) / 1000) - 3;
 
 				if(displaySeconds < 0) {
 					displaySeconds = '0' + '!'.repeat(Math.min(3, -displaySeconds));
