@@ -4,6 +4,8 @@
   "description": "A remake of http://prodraft.leagueoflegends.com",
   "main": "index.js",
   "dependencies": {
+    "@sentry/node": "^6.1.0",
+    "@sentry/tracing": "^6.1.0",
     "compression": "^1.7.4",
     "dayjs": "^1.10.4",
     "express": "^4.17.1",
