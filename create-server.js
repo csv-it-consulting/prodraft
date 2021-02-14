@@ -3,10 +3,9 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 	const app = express();
 	const compression = require('compression');
 	const bodyParser = require('body-parser');
-	const http = require('http').Server(app);
-	const io = require('socket.io')(http);
-	const HTTP_PORT = 80;
-	const SOCKET_PORT = 3000;
+	const server = require('http').createServer(app);
+	const io = require('socket.io')(server);
+	const PORT = 80;
 
 	app.use(compression());
 	app.use(express.static('public'));
@@ -21,8 +20,7 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 		});
 	});
 
-	http.listen(HTTP_PORT);
-	io.listen(SOCKET_PORT);
+	server.listen(PORT);
 
 	return io;
 };
