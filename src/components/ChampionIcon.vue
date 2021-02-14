@@ -25,7 +25,7 @@ export default {
 		},
 
 		url() {
-			return `http://ddragon.leagueoflegends.com/cdn/${this.champion.version}/img/${this.type}/${this.type === 'sprite' ? this.champion.sprite.src : `${this.champion.id}.png`}`;
+			return `https://ddragon.leagueoflegends.com/cdn/${this.champion.version}/img/${this.type}/${this.type === 'sprite' ? this.champion.sprite.src : `${this.champion.id}.png`}`;
 		},
 	},
 
