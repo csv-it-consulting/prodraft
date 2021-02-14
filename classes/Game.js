@@ -1,12 +1,12 @@
 const dayjs = require('dayjs');
-const crypto = require('crypto');
+const uuid = require('uuid');
 
 const Team = require('./Team');
 
 module.exports = class Game {
 	onStateChange = null;
 
-	id = crypto.randomUUID();
+	id = uuid.v4();
 	champions = null;
 	teams = null;
 	expiration = dayjs().add(24, 'hour');

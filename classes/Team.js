@@ -1,7 +1,7 @@
-const crypto = require('crypto');
+const uuid = require('uuid');
 
 module.exports = class Team {
-	id = crypto.randomUUID();
+	id = uuid.v4();
 	name = null;
 
 	constructor(name) {
