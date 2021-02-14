@@ -87,6 +87,7 @@ export default {
 				champion: null,
 			},
 
+			timerOffset: null,
 			timer: null,
 			timerFrame: null,
 		};
@@ -119,6 +120,7 @@ export default {
 			});
 			this.socket.on('champions', champions => this.champions = champions);
 			this.socket.on('assign-team', team => this.team = team);
+			this.socket.on('server-time', time => this.timerOffset = Number(dayjs()) - time);
 			this.socket.on('game-expired', () => {
 				alert('This draft has expired. Please create a new draft.');
 
@@ -177,7 +179,7 @@ export default {
 
 		startTimer() {
 			const updateTimer = () => {
-				let displaySeconds = Math.floor((this.state.roundExpiration - Number(dayjs())) / 1000) - 3;
+				let displaySeconds = Math.floor((this.state.roundExpiration - Number(dayjs()) + this.timerOffset) / 1000) - 3;
 
 				if(displaySeconds < 0) {
 					displaySeconds = '0' + '!'.repeat(Math.min(3, -displaySeconds));

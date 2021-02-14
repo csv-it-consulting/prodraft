@@ -2,6 +2,7 @@ const ChampionList = require('./classes/ChampionList');
 const GameList = require('./classes/GameList');
 const Game = require('./classes/Game');
 const createServer = require('./create-server');
+const dayjs = require('dayjs');
 
 function validateGameCreation(input) {
 	if(!Array.isArray(input.teams) || input.teams.length !== 2 || typeof input.teams[0] !== 'string' || typeof input.teams[1] !== 'string') {
@@ -47,6 +48,7 @@ function onJoinGame(socket) {
 	}
 
 	socket.emit('champions', ChampionList.get());
+	socket.emit('server-time', Number(dayjs()))
 	socket.emit('assign-team', game.getTeamIndexById(socket.handshake.query.team));
 	socket.emit('game-state', game.getState());
 	socket.join(`game.${game.getId()}`);
