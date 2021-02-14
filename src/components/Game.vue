@@ -52,7 +52,7 @@ export default {
 		},
 
 		bannedChampionIds() {
-			return this.state.bans.flat();
+			return this.state.bans.flat(Infinity);
 		},
 
 		canAct() {
@@ -68,7 +68,7 @@ export default {
 		},
 
 		pickedChampionIds() {
-			return this.state.picks.flat();
+			return this.state.picks.flat(Infinity);
 		},
 	},
 

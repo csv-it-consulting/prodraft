@@ -181,7 +181,7 @@ module.exports = class Game {
 		if(this.hover[teamIndex] !== null) {
 			value = this.hover[teamIndex];
 		} else if(action === 'pick') {
-			value = this.champions.filter(champion => ![this.picks, this.bans].flat().includes(champion.id)).sort(() => Math.random() < 0.5 ? 1 : -1)[0].id;
+			value = this.champions.filter(champion => ![this.picks, this.bans].flat(Infinity).includes(champion.id)).sort(() => Math.random() < 0.5 ? 1 : -1)[0].id;
 		}
 
 		this.act(this.teams[teamIndex].getId(), action, value, true);
