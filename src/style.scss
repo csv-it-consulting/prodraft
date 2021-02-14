@@ -17,7 +17,7 @@ button:disabled {
 	background: linear-gradient(90deg, $info, $danger);
 }
 
-@keyframes champion-hovered {
+@keyframes champion-active {
 	0%, 100% {
 		opacity: 1;
 	}
@@ -25,10 +25,6 @@ button:disabled {
 	50% {
 		opacity: 0.5;
 	}
-}
-
-.champion-hovered {
-	animation: champion-hovered 2s infinite ease-in-out;
 }
 
 .champion-banned {
@@ -43,4 +39,9 @@ button:disabled {
 	position: absolute;
 	right: 0;
 	bottom: 0;
+}
+
+.champion-active {
+	outline: 5px solid $warning !important;
+	animation: champion-active 2s infinite ease-in-out;
 }

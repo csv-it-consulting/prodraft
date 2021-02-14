@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		<div class="row mt-3 picker-list">
-			<div class="col-12 d-flex flex-wrap justify-content-start align-content-start h-100 overflow-auto px-3 pb-3">
+			<div class="col-12 d-flex flex-wrap justify-content-center align-content-start h-100 overflow-auto px-3 pb-3">
 				<div v-for="champion in filteredChampions" class="m-2 d-flex">
 					<champion-icon :champion="champion" :size="48" class="d-flex justify-content-center champion-icon" :class="{ 'champion-picked': pickedIds.includes(champion.id), 'champion-banned': bannedIds.includes(champion.id), 'champion-selected': valueProxy !== null && champion.id === valueProxy.id }" @click.native="select(champion)"></champion-icon>
 				</div>

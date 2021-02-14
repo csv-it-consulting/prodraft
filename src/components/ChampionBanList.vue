@@ -4,9 +4,11 @@
 			<div class="row" :class="team === 0 ? 'flex-row-reverse' : 'flex-row'">
 				<template v-for="index in 5">
 					<div class="bg-secondary mx-2" v-if="index <= bannedChampions.length && bannedChampions[index - 1].data !== null">
-						<champion-icon class="d-flex justify-content-center card-img rounded-0" :class="bannedChampions[index - 1].hovered ? 'champion-hovered' : 'champion-banned'" :champion="bannedChampions[index - 1].data" :size="size"></champion-icon>
+						<champion-icon class="d-flex justify-content-center card-img rounded-0" :class="{ 'champion-banned': !bannedChampions[index - 1].hovered, 'champion-active': index - 1 === activeIndex }" :champion="bannedChampions[index - 1].data" :size="size"></champion-icon>
 					</div>
-					<div v-else class="bg-secondary mx-2" :class="{ 'champion-banned': bannedChampions[index - 1] !== undefined && bannedChampions[index - 1].data === null }" :style="`width: ${size}px; height: ${size}px;`"></div>
+					<div v-else class="bg-secondary mx-2" :style="`width: ${size}px; height: ${size}px;`">
+						<div class="h-100 w-100" :class="{ 'champion-banned': bannedChampions[index - 1] && !bannedChampions[index - 1].hovered, 'champion-active': index - 1 === activeIndex }"></div>
+					</div>
 					<span v-if="index === 3" class="vertical-separator mx-2"></span>
 				</template>
 			</div>
@@ -20,6 +22,14 @@ export default {
 	components: { ChampionIcon },
 
 	computed: {
+		activeIndex() {
+			const bannedChampionsLength = this.bannedChampions.length;
+			const lastBannedChampion = this.bannedChampions[bannedChampionsLength - 1];
+			const isLastChampionHovered = lastBannedChampion && lastBannedChampion.hovered;
+
+			return this.active ? isLastChampionHovered ? bannedChampionsLength - 1 : bannedChampionsLength : null;
+		},
+
 		bannedChampions() {
 			const champions = this.bans.map(id => ({
 				data: id === null ? null : this.champions.find(champion => champion.id === id),

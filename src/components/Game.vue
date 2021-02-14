@@ -2,7 +2,7 @@
 	<div v-if="state !== null && champions !== null" class="d-flex flex-column h-100">
 		<div class="row game-header">
 			<div class="col-5 bg-info d-flex justify-content-between align-items-baseline">
-				<h1 class="d-inline-block text-nowrap overflow-hidden text-truncate">{{ state.teams[0].name }}</h1>
+				<h1 class="d-inline-block text-truncate">{{ state.teams[0].name }}</h1>
 				<h5 class="d-inline-block">{{ getTeamAction(0) }}</h5>
 			</div>
 			<div class="col-2 d-flex justify-content-center" :class="['ready', 'done'].includes(currentAct) ? 'blue-red-gradient' : (currentTeam === 0 ? 'blue-act-gradient' : 'red-act-gradient')">
@@ -10,7 +10,7 @@
 			</div>
 			<div class="col-5 bg-danger d-flex justify-content-between align-items-baseline">
 				<h5 class="d-inline-block">{{ getTeamAction(1) }}</h5>
-				<h1 class="d-inline-block text-nowrap overflow-hidden text-truncate">{{ state.teams[1].name }}</h1>
+				<h1 class="d-inline-block text-truncate">{{ state.teams[1].name }}</h1>
 			</div>
 		</div>
 		<div class="row game-body">
@@ -141,9 +141,9 @@ export default {
 		getTeamAction(team) {
 			if(this.state.current === 0) {
 				if(!this.state.ready[team]) {
-					return 'Readying';
+					return 'Not Ready';
 				} else if(!this.state.ready[team ^ 1]) {
-					return 'Waiting';
+					return 'Ready';
 				}
 			}
 
