@@ -2,27 +2,27 @@
 	<div v-if="state !== null && champions !== null" class="d-flex flex-column h-100">
 		<div class="row" style="height: 65px;">
 			<div class="col-5 bg-info d-flex justify-content-between align-items-baseline">
-				<h1 class="d-inline-block">{{ state.teams[0].name }}</h1>
+				<h1 class="d-inline-block text-nowrap overflow-hidden text-truncate">{{ state.teams[0].name }}</h1>
 				<h5 class="d-inline-block">{{ getTeamAction(0) }}</h5>
 			</div>
-			<div class="col-2 d-flex justify-content-center" :class="['ready', 'done'].includes(currentAct) ? '' : (currentTeam === 0 ? 'blue-act-gradient' : 'red-act-gradient')">
-				<h1>{{ currentAct === 'done' ? 'Done' : timer }}</h1>
+			<div class="col-2 d-flex justify-content-center" :class="['ready', 'done'].includes(currentAct) ? 'blue-red-gradient' : (currentTeam === 0 ? 'blue-act-gradient' : 'red-act-gradient')">
+				<h1>{{ timer }}</h1>
 			</div>
 			<div class="col-5 bg-danger d-flex justify-content-between align-items-baseline">
 				<h5 class="d-inline-block">{{ getTeamAction(1) }}</h5>
-				<h1 class="d-inline-block">{{ state.teams[1].name }}</h1>
+				<h1 class="d-inline-block text-nowrap overflow-hidden text-truncate">{{ state.teams[1].name }}</h1>
 			</div>
 		</div>
 		<div class="row" style="height: calc(100% - 65px - 80px);">
-			<champion-pick-list class="col-xl-2 col-sm-3 bg-info p-3" :champions="champions" :picks="state.picks[0]" :hovered="getHovered(0, 'pick')"></champion-pick-list>
+			<champion-pick-list class="col-xl-2 col-sm-3 bg-info p-3" :champions="champions" :picks="state.picks[0]" :hovered="getHovered(0, 'pick')" :active="getActive(0, 'pick')"></champion-pick-list>
 			<div class="col-xl-8 col-sm-6 overflow-hidden h-100">
 				<champion-picker ref="championPicker" :champions="champions" :banned-ids="bannedChampionIds" :picked-ids="pickedChampionIds" :disabled="team === null || ['ready', 'done'].includes(currentAct)" v-model="input.champion"></champion-picker>
 			</div>
-			<champion-pick-list class="col-xl-2 col-sm-3 bg-danger p-3" :champions="champions" :picks="state.picks[1]" :hovered="getHovered(1, 'pick')"></champion-pick-list>
+			<champion-pick-list class="col-xl-2 col-sm-3 bg-danger p-3" :champions="champions" :picks="state.picks[1]" :hovered="getHovered(1, 'pick')" :active="getActive(1, 'pick')"></champion-pick-list>
 		</div>
 		<div class="row" style="height: 80px;">
 			<div class="col-5 bg-info d-flex justify-content-end">
-				<champion-ban-list :champions="champions" :bans="state.bans[0]" :team="0" :hovered="getHovered(0, 'ban')"></champion-ban-list>
+				<champion-ban-list :champions="champions" :bans="state.bans[0]" :team="0" :hovered="getHovered(0, 'ban')" :active="getActive(0, 'ban')"></champion-ban-list>
 			</div>
 			<div class="col-2">
 				<div class="py-3 h-100">
@@ -30,7 +30,7 @@
 				</div>
 			</div>
 			<div class="col-5 bg-danger d-flex justify-content-start">
-				<champion-ban-list :champions="champions" :bans="state.bans[1]" :team="1" :hovered="getHovered(1, 'ban')"></champion-ban-list>
+				<champion-ban-list :champions="champions" :bans="state.bans[1]" :team="1" :hovered="getHovered(1, 'ban')" :active="getActive(1, 'ban')"></champion-ban-list>
 			</div>
 		</div>
 	</div>
@@ -126,6 +126,10 @@ export default {
 			});
 		},
 
+		getActive(team, act) {
+			return this.currentTeam === team && this.currentAct === act;
+		},
+
 		getHovered(team, act) {
 			if(this.currentTeam !== team || this.currentAct !== act) {
 				return null;
@@ -152,6 +156,8 @@ export default {
 
 		endTimer() {
 			cancelAnimationFrame(this.timerFrame);
+			this.timerFrame = null;
+			this.timer = null;
 		},
 
 		hover(champion) {
@@ -175,7 +181,6 @@ export default {
 				}
 
 				this.timer = displaySeconds;
-
 				this.timerFrame = requestAnimationFrame(updateTimer);
 			};
 

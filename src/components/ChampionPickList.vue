@@ -36,6 +36,11 @@ export default {
 	},
 
 	props: {
+		active: {
+			type: Boolean,
+			default: false,
+		},
+
 		champions: {
 			type: Array,
 			required: true,

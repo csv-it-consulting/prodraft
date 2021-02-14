@@ -12,3 +12,7 @@ button:disabled {
 .red-act-gradient {
 	background: linear-gradient(90deg, $info 10%, $danger 35%);
 }
+
+.blue-red-gradient {
+	background: linear-gradient(90deg, $info, $danger);
+}

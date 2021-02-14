@@ -38,6 +38,11 @@ export default {
 	},
 
 	props: {
+		active: {
+			type: Boolean,
+			default: false,
+		},
+
 		bans: {
 			type: Array,
 			required: true,
