@@ -139,12 +139,12 @@ export default {
 		},
 
 		getTeamAction(team) {
-			if(this.state.current === 0 && !this.state.ready[team]) {
-				return 'Readying';
-			}
-
-			if(this.state.current === 0 && !this.state.ready[team ^ 1]) {
-				return 'Waiting for opponent';
+			if(this.state.current === 0) {
+				if(!this.state.ready[team]) {
+					return 'Readying';
+				} else if(!this.state.ready[team ^ 1]) {
+					return 'Waiting';
+				}
 			}
 
 			if(this.currentTeam !== team) {

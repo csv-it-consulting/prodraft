@@ -125,7 +125,7 @@ module.exports = class Game {
 			return false;
 		}
 
-		if(this.current === 0 && action === 'ready') {
+		if(this.current === 0 && action === 'ready' && value === true) {
 			return true;
 		}
 
