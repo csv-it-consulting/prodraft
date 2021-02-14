@@ -1,6 +1,6 @@
 <template>
 	<div class="h-100 pt-3">
-		<div class="row px-3" style="height: 38px;">
+		<div class="row px-3 picker-toolbar">
 			<div class="col-12">
 				<div class="input-group h-100">
 					<div class="input-group-prepend">
@@ -11,7 +11,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row mt-3" style="height: calc(100% - 1rem - 38px);">
+		<div class="row mt-3 picker-list">
 			<div class="col-12 d-flex flex-wrap justify-content-start align-content-start h-100 overflow-auto px-3 pb-3">
 				<div v-for="champion in filteredChampions" class="m-2 d-flex">
 					<champion-icon :champion="champion" :size="48" class="d-flex justify-content-center champion-icon" :class="{ 'champion-picked': pickedIds.includes(champion.id), 'champion-banned': bannedIds.includes(champion.id), 'champion-selected': valueProxy !== null && champion.id === valueProxy.id }" @click.native="select(champion)"></champion-icon>
@@ -127,25 +127,23 @@ export default {
 };
 </script>
 <style scoped>
+.picker-toolbar {
+	height: 38px;
+}
+
+.picker-list {
+	height: calc(100% - 1rem - 38px);
+}
+
 .champion-icon {
 	cursor: pointer;
 }
 
-.champion-picked, .champion-banned {
-	filter: grayscale(1);
-}
-
-.champion-banned::after {
-	content: "🚫";
-	font-size: 16px;
-	opacity: 0.5;
-
-	position: absolute;
-	right: 0;
-	bottom: 0;
-}
-
 .champion-selected {
 	outline: 5px solid #f39c12;
+}
+
+.champion-picked {
+	filter: grayscale(1);
 }
 </style>

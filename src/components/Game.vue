@@ -1,6 +1,6 @@
 <template>
 	<div v-if="state !== null && champions !== null" class="d-flex flex-column h-100">
-		<div class="row" style="height: 65px;">
+		<div class="row game-header">
 			<div class="col-5 bg-info d-flex justify-content-between align-items-baseline">
 				<h1 class="d-inline-block text-nowrap overflow-hidden text-truncate">{{ state.teams[0].name }}</h1>
 				<h5 class="d-inline-block">{{ getTeamAction(0) }}</h5>
@@ -13,14 +13,14 @@
 				<h1 class="d-inline-block text-nowrap overflow-hidden text-truncate">{{ state.teams[1].name }}</h1>
 			</div>
 		</div>
-		<div class="row" style="height: calc(100% - 65px - 80px);">
+		<div class="row game-body">
 			<champion-pick-list class="col-xl-2 col-sm-3 bg-info p-3" :champions="champions" :picks="state.picks[0]" :hovered="getHovered(0, 'pick')" :active="getActive(0, 'pick')"></champion-pick-list>
 			<div class="col-xl-8 col-sm-6 overflow-hidden h-100">
 				<champion-picker ref="championPicker" :champions="champions" :banned-ids="bannedChampionIds" :picked-ids="pickedChampionIds" :disabled="team === null || ['ready', 'done'].includes(currentAct)" v-model="input.champion"></champion-picker>
 			</div>
 			<champion-pick-list class="col-xl-2 col-sm-3 bg-danger p-3" :champions="champions" :picks="state.picks[1]" :hovered="getHovered(1, 'pick')" :active="getActive(1, 'pick')"></champion-pick-list>
 		</div>
-		<div class="row" style="height: 80px;">
+		<div class="row game-footer">
 			<div class="col-5 bg-info d-flex justify-content-end">
 				<champion-ban-list :champions="champions" :bans="state.bans[0]" :team="0" :hovered="getHovered(0, 'ban')" :active="getActive(0, 'ban')"></champion-ban-list>
 			</div>
@@ -197,3 +197,16 @@ export default {
 	},
 };
 </script>
+<style scoped>
+.game-header {
+	height: 65px;
+}
+
+.game-body {
+	height: calc(100% - 65px - 80px);
+}
+
+.game-footer {
+	height: 80px;
+}
+</style>

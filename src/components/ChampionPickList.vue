@@ -3,10 +3,10 @@
 		<div class="card bg-transparent border-0 align-items-center">
 			<template v-for="index in 5">
 				<div v-if="index <= pickedChampions.length" class="bg-secondary mb-3">
-					<champion-icon class="card-img rounded-0 bg-white" :class="{ 'champion-hovered': pickedChampions[index - 1].hovered }" :champion="pickedChampions[index - 1].data" :size="100"></champion-icon>
+					<champion-icon class="card-img rounded-0" :class="{ 'champion-hovered': pickedChampions[index - 1].hovered }" :champion="pickedChampions[index - 1].data" :size="size"></champion-icon>
 				</div>
-				<div v-else class="bg-secondary mb-3" style="width: 100px; height: 100px;"></div>
-				<span v-if="index === 3" style="border-bottom: 5px solid #444444" class="mb-3 w-100"></span>
+				<div v-else class="bg-secondary mb-3" :style="`width: ${size}px; height: ${size}px;`"></div>
+				<span v-if="index === 3" class="horizontal-separator mb-3 w-100"></span>
 			</template>
 		</div>
 	</div>
@@ -35,6 +35,12 @@ export default {
 		},
 	},
 
+	data() {
+		return {
+			size: 100,
+		};
+	},
+
 	props: {
 		active: {
 			type: Boolean,
@@ -59,17 +65,7 @@ export default {
 };
 </script>
 <style scoped>
-@keyframes champion-hovered {
-	0%, 100% {
-		opacity: 1;
-	}
-
-	50% {
-		opacity: 0.5;
-	}
-}
-
-.champion-hovered {
-	animation: champion-hovered 2s infinite ease-in-out;
+.horizontal-separator {
+	border-bottom: 5px solid #444444;
 }
 </style>

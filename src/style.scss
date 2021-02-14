@@ -16,3 +16,31 @@ button:disabled {
 .blue-red-gradient {
 	background: linear-gradient(90deg, $info, $danger);
 }
+
+@keyframes champion-hovered {
+	0%, 100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+}
+
+.champion-hovered {
+	animation: champion-hovered 2s infinite ease-in-out;
+}
+
+.champion-banned {
+	filter: grayscale(1);
+}
+
+.champion-banned::after {
+	content: "🚫";
+	font-size: 16px;
+	opacity: 0.5;
+
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
