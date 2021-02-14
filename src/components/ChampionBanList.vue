@@ -68,7 +68,7 @@ export default {
 .champion-banned::after {
 	content: "🚫";
 	font-size: 16px;
-	opacity: 50%;
+	opacity: 0.5;
 
 	position: absolute;
 	right: 0;
@@ -77,11 +77,11 @@ export default {
 
 @keyframes champion-hovered {
 	0%, 100% {
-		opacity: 100%;
+		opacity: 1;
 	}
 
 	50% {
-		opacity: 50%;
+		opacity: 0.5;
 	}
 }
 

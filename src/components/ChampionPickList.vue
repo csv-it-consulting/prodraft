@@ -56,11 +56,11 @@ export default {
 <style scoped>
 @keyframes champion-hovered {
 	0%, 100% {
-		opacity: 100%;
+		opacity: 1;
 	}
 
 	50% {
-		opacity: 50%;
+		opacity: 0.5;
 	}
 }
 
