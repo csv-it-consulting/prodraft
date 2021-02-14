@@ -156,6 +156,7 @@ export default {
 
 		endTimer() {
 			cancelAnimationFrame(this.timerFrame);
+
 			this.timerFrame = null;
 			this.timer = null;
 		},
@@ -180,8 +181,10 @@ export default {
 					displaySeconds = '0' + '!'.repeat(Math.min(3, -displaySeconds));
 				}
 
-				this.timer = displaySeconds;
-				this.timerFrame = requestAnimationFrame(updateTimer);
+				if(this.timerFrame !== null) {
+					this.timer = displaySeconds;
+					this.timerFrame = requestAnimationFrame(updateTimer);
+				}
 			};
 
 			this.timerFrame = requestAnimationFrame(updateTimer);
