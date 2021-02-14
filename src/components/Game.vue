@@ -16,7 +16,7 @@
 		<div class="row" style="height: calc(100% - 65px - 80px);">
 			<champion-pick-list class="col-xl-2 col-sm-3 bg-info p-3" :champions="champions" :picks="state.picks[0]" :hovered="getHovered(0, 'pick')"></champion-pick-list>
 			<div class="col-xl-8 col-sm-6 overflow-hidden h-100">
-				<champion-picker :champions="champions" :banned-ids="bannedChampionIds" :picked-ids="pickedChampionIds" :disabled="team === null || ['ready', 'done'].includes(currentAct)" v-model="input.champion"></champion-picker>
+				<champion-picker ref="championPicker" :champions="champions" :banned-ids="bannedChampionIds" :picked-ids="pickedChampionIds" :disabled="team === null || ['ready', 'done'].includes(currentAct)" v-model="input.champion"></champion-picker>
 			</div>
 			<champion-pick-list class="col-xl-2 col-sm-3 bg-danger p-3" :champions="champions" :picks="state.picks[1]" :hovered="getHovered(1, 'pick')"></champion-pick-list>
 		</div>
@@ -159,6 +159,10 @@ export default {
 		},
 
 		lock() {
+			if(['ban', 'pick'].includes(this.currentAct) && this.$refs.championPicker) {
+				this.$refs.championPicker.clearFilters();
+			}
+
 			this.socket.emit('game-action', { action: this.currentAct, value: this.currentAct === 'ready' ? true : this.input.champion?.id });
 		},
 

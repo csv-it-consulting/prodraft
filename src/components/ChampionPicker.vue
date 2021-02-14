@@ -67,6 +67,11 @@ export default {
 	},
 
 	methods: {
+		clearFilters() {
+			this.input.search = '';
+			this.input.tag = null;
+		},
+
 		clearInvalidValue() {
 			if(this.valueProxy === null || this.disabled || this.bannedIds.includes(this.valueProxy.id) || this.pickedIds.includes(this.valueProxy.id)) {
 				this.select(null);
