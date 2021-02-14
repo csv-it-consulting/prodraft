@@ -162,7 +162,9 @@ export default {
 		},
 
 		hover(champion) {
-			this.socket.emit('game-action', { action: 'hover', value: champion?.id });
+			if(champion !== null) {
+				this.socket.emit('game-action', { action: 'hover', value: champion.id });
+			}
 		},
 
 		lock() {
