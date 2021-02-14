@@ -107,7 +107,7 @@ export default {
 					this.input.champion = this.champions.find(champion => champion.id === this.state.hover[this.team]);
 				}
 
-				if(this.state.order[this.state.current][0] === this.team && this.input.champion) {
+				if(this.state.order[this.state.current][0] === this.team && this.input.champion && this.state.hover[this.team] !== this.input.champion?.id) {
 					this.hover(this.input.champion);
 				}
 
