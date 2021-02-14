@@ -12,10 +12,6 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="name">Match Name</label>
-						<input type="text" class="form-control bg-secondary text-white" id="name" v-model="input.name">
-					</div>
-					<div class="form-group">
 						<label for="blue-name">Blue Team Name</label>
 						<input type="text" class="form-control bg-info text-white" id="blue-name" v-model="input.teams[0]">
 					</div>
@@ -43,7 +39,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="blue-link">Blue Captain Link</label>
+						<label for="blue-link">{{ input.teams[0] }} Captain Link</label>
 						<div class="input-group">
 							<input class="form-control bg-info border-0 text-white" :value="links.teams[0]" readonly id="blue-link">
 							<div class="input-group-append">
@@ -53,7 +49,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="red-link">Red Captain Link</label>
+						<label for="red-link">{{ input.teams[1] }} Captain Link</label>
 						<div class="input-group">
 							<input class="form-control bg-danger border-0 text-white" :value="links.teams[1]" readonly id="red-link">
 							<div class="input-group-append">
@@ -62,6 +58,7 @@
 							</div>
 						</div>
 					</div>
+					<p>These links will expire in 24 hours.</p>
 				</div>
 			</div>
 		</div>
@@ -78,7 +75,7 @@ export default {
 
 	computed: {
 		canCreate() {
-			return this.input.name && this.input.teams[0] && this.input.teams[1];
+			return this.input.teams[0] && this.input.teams[1];
 		},
 	},
 
@@ -106,7 +103,6 @@ export default {
 			},
 
 			input: {
-				name: '',
 				teams: ['', ''],
 			},
 		};

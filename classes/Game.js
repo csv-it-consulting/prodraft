@@ -1,15 +1,22 @@
+const dayjs = require('dayjs');
 const crypto = require('crypto');
 
 const Team = require('./Team');
 
 module.exports = class Game {
+	onStateChange = null;
+
 	id = crypto.randomUUID();
-	name = null;
+	champions = null;
 	teams = null;
+	expiration = dayjs().add(24, 'hour');
+
+	roundExpiration = null;
 
 	bans = [[], []];
 	picks = [[], []];
 
+	hover = [null, null];
 	ready = [false, false];
 
 	order = [
@@ -37,12 +44,18 @@ module.exports = class Game {
 	];
 	current = 0;
 
-	constructor(name, teamNames) {
-		this.name = name;
+	constructor(teamNames, champions, onStateChange) {
+		this.champions = champions;
 		this.teams = [
 			new Team(teamNames[0]),
 			new Team(teamNames[1]),
 		];
+
+		this.onStateChange = onStateChange;
+	}
+
+	getExpiration() {
+		return this.expiration;
 	}
 
 	getId() {
@@ -52,11 +65,13 @@ module.exports = class Game {
 	getState() {
 		return {
 			id: this.id,
-			name: this.name,
 
 			ready: this.ready,
+			hover: this.hover,
 			bans: this.bans,
 			picks: this.picks,
+
+			roundExpiration: Number(this.roundExpiration),
 
 			order: this.order,
 			current: this.current,
@@ -85,7 +100,25 @@ module.exports = class Game {
 		return index === null ? null : this.teams[index];
 	}
 
-	canAct(id, action) {
+	endRound() {
+		this.roundExpiration = null;
+		clearTimeout(this.roundTimeout);
+	}
+
+	startRound() {
+		this.endRound();
+
+		const ROUND_LENGTH_SECONDS = 33;
+
+		this.roundExpiration = dayjs().add(ROUND_LENGTH_SECONDS, 'second');
+		this.roundTimeout = setTimeout(() => this.autoAct(this.order[this.current][1]), ROUND_LENGTH_SECONDS * 1000);
+	}
+
+	canAct(id, action, value) {
+		if(value === null) {
+			return false;
+		}
+
 		const teamIndex = this.getTeamIndexById(id);
 
 		if(teamIndex === null) {
@@ -98,28 +131,59 @@ module.exports = class Game {
 
 		const currentRound = this.order[this.current];
 
-		return currentRound[0] === teamIndex && currentRound[1] === action;
+		if([this.picks, this.bans].flat(Infinity).includes(value)) {
+			return false;
+		}
+
+		return currentRound[0] === teamIndex && ['hover', currentRound[1]].includes(action);
 	}
 
-	act(id, action, championId) {
-		if(!this.canAct(id, action)) {
-			return false;
+	act(id, action, value, bypass = false) {
+		if(!bypass && !this.canAct(id, action, value)) {
+			return;
 		}
 
 		const teamIndex = this.getTeamIndexById(id);
 
-		if(action === 'ban') {
-			this.bans[teamIndex].push(championId);
+		switch(action) {
+			case 'ban':
+			case 'pick':
+				this[action + 's'][teamIndex].push(value);
+				this.hover[teamIndex] = null;
+				++this.current;
 
-			++this.current;
-		} else if(action === 'pick') {
-			this.picks[teamIndex].push(championId);
+				if(this.order[this.current][1] === 'done') {
+					this.endRound();
+				} else {
+					this.startRound();
+				}
 
-			++this.current;
-		} else if(action === 'ready') {
-			this.ready[teamIndex] = true;
+				break;
+
+			case 'hover':
+			case 'ready':
+				this[action][teamIndex] = value;
+
+				if(action === 'ready' && !this.ready.includes(false)) {
+					this.startRound();
+				}
+
+				break;
 		}
 
-		return true;
+		this.onStateChange(this);
+	}
+
+	autoAct(action) {
+		const teamIndex = this.order[this.current][0];
+
+		let value = null;
+		if(this.hover[teamIndex] !== null) {
+			value = this.hover[teamIndex];
+		} else if(action === 'pick') {
+			value = this.champions.filter(champion => ![this.picks, this.bans].flat().includes(champion.id)).sort(() => Math.random() < 0.5 ? 1 : -1)[0].id;
+		}
+
+		this.act(this.teams[teamIndex].getId(), action, value, true);
 	}
 };

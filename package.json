@@ -1,15 +1,14 @@
 {
   "name": "prodraft",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A remake of http://prodraft.leagueoflegends.com",
   "main": "index.js",
   "dependencies": {
+    "compression": "^1.7.4",
+    "dayjs": "^1.10.4",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "socket.io": "^3.1.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "CSV IT Consulting",

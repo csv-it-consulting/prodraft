@@ -1,6 +1,6 @@
 <template>
-	<div class="image" :style="style" v-if="type === 'sprite'"></div>
-	<img class="image" :src="url" :style="style" v-else>
+	<div class="image" :style="style" v-if="type === 'sprite'" :title="champion.name"></div>
+	<img class="image" :src="url" :style="style" :title="champion.name" v-else>
 </template>
 <script>
 export default {

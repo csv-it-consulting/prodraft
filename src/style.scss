@@ -1,2 +1,14 @@
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
+
+button:disabled {
+	cursor: not-allowed;
+}
+
+.blue-act-gradient {
+	background: linear-gradient(90deg, $info 65%, $danger 90%);
+}
+
+.red-act-gradient {
+	background: linear-gradient(90deg, $info 10%, $danger 35%);
+}
