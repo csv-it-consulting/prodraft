@@ -164,7 +164,7 @@ export default {
 		},
 
 		hover(champion) {
-			if(champion !== null) {
+			if(champion !== null && champion !== undefined) {
 				this.socket.emit('game-action', { action: 'hover', value: champion.id });
 			}
 		},
