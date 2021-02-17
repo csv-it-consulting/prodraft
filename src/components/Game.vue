@@ -3,13 +3,13 @@
 		<div class="row game-header">
 			<div class="col-5 bg-info d-flex justify-content-between align-items-baseline">
 				<h1 class="d-inline-block text-truncate">{{ state.teams[0].name }}</h1>
-				<h5 class="d-inline-block">{{ getTeamAction(0) }}</h5>
+				<h5 class="d-inline-block text-nowrap">{{ getTeamAction(0) }}</h5>
 			</div>
 			<div class="col-2 d-flex justify-content-center" :class="['ready', 'done'].includes(currentAct) ? 'blue-red-gradient' : (currentTeam === 0 ? 'blue-act-gradient' : 'red-act-gradient')">
 				<h1>{{ timer }}</h1>
 			</div>
 			<div class="col-5 bg-danger d-flex justify-content-between align-items-baseline">
-				<h5 class="d-inline-block">{{ getTeamAction(1) }}</h5>
+				<h5 class="d-inline-block text-nowrap">{{ getTeamAction(1) }}</h5>
 				<h1 class="d-inline-block text-truncate">{{ state.teams[1].name }}</h1>
 			</div>
 		</div>
