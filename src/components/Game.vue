@@ -23,7 +23,7 @@
 			</div>
 			<div class="row game-footer">
 				<div class="col-5 bg-info d-flex justify-content-between">
-					<div class="d-flex flex-column justify-content-center">
+					<div class="d-flex flex-column justify-content-center bg-secondary my-2 p-2">
 						<div class="d-flex justify-content-center mb-1">
 							<div class="custom-control custom-checkbox">
 								<input type="checkbox" class="custom-control-input" id="audio-checkbox" v-model="audio.isEnabled">
