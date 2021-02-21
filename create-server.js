@@ -20,7 +20,8 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 	app.use(Sentry.Handlers.tracingHandler());
 
 	app.use(compression());
-	app.use(express.static('public'));
+	app.use('/assets/audio', express.static('public/assets/audio', { maxAge: '1y' }));
+	app.use(express.static('public', { maxAge: 0 }));
 	app.use(bodyParser.json());
 
 	app.post('/game', createGame);
