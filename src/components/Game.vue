@@ -103,7 +103,7 @@ export default {
 			teamId: null,
 
 			audio: {
-				isEnabled: ['true', true, null].includes(savedAudio),
+				isEnabled: ['true', true].includes(savedAudio),
 				isSetup: false,
 
 				volume: savedAudioVolume === null ? 0.5 : Number(savedAudioVolume),
