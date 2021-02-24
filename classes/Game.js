@@ -131,7 +131,7 @@ module.exports = class Game {
 
 		const currentRound = this.order[this.current];
 
-		if([this.picks, this.bans].flat(Infinity).includes(value)) {
+		if([this.picks, this.bans].flat(Infinity).includes(value) || !this.champions.find(champion => champion.id === value)) {
 			return false;
 		}
 
