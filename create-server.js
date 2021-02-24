@@ -7,6 +7,8 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 	const io = require('socket.io')(server);
 	const Sentry = require('@sentry/node');
 	const SentryTracing = require('@sentry/tracing');
+	const fs = require('fs');
+	const path = require('path');
 	const PORT = 80;
 
 	Sentry.init({
@@ -20,8 +22,22 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 	app.use(Sentry.Handlers.tracingHandler());
 
 	app.use(compression());
-	app.use('/assets/audio', express.static('public/assets/audio', { maxAge: '1y' }));
-	app.use(express.static('public', { maxAge: 0 }));
+
+	const mixManifest = require(path.join(__dirname, 'public', 'mix-manifest.json'));
+
+	app.get('/', (req, res) => {
+		fs.readFile(path.join(__dirname, 'public', 'index.html'), (error, data) => {
+			if(error) {
+				res.sendStatus(500);
+
+				throw error;
+			} else {
+				res.send(data.toString().replace(/ASSET\[([^]+?)\]/g, ($0, $1) => mixManifest[$1]));
+			}
+		});
+	});
+
+	app.use(express.static('public', { index: false, maxAge: '1y' }));
 	app.use(bodyParser.json());
 
 	app.post('/game', createGame);
