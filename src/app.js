@@ -9,6 +9,7 @@ Sentry.init({
 	dsn: process.env.MIX_SENTRY_DSN_FRONTEND,
 	integrations: [new SentryIntegrations.BrowserTracing()],
 	logErrors: true,
+	release: process.env.MIX_COMMIT_HASH,
 });
 
 // Extend Vue

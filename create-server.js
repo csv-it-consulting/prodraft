@@ -17,6 +17,7 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 			new Sentry.Integrations.Http({ tracing: true }),
 			new SentryTracing.Integrations.Express({ app }),
 		],
+		release: process.env.COMMIT_HASH,
 	});
 	app.use(Sentry.Handlers.requestHandler());
 	app.use(Sentry.Handlers.tracingHandler());
