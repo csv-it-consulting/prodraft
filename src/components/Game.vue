@@ -22,8 +22,8 @@
 				<champion-pick-list class="col-xl-2 col-sm-3 bg-danger p-3" :champions="champions" :picks="state.picks[1]" :hovered="getHovered(1, 'pick')" :active="getActive(1, 'pick')"></champion-pick-list>
 			</div>
 			<div class="row game-footer">
-				<div class="col-5 bg-info d-flex justify-content-between">
-					<div class="d-flex flex-column justify-content-center bg-secondary my-2 p-2">
+				<div class="col-5 bg-info d-flex" :class="team === null ? 'justify-content-end' : 'justify-content-between'">
+					<div class="d-flex flex-column justify-content-center bg-secondary my-2 p-2" v-if="team !== null">
 						<div class="d-flex justify-content-center mb-1">
 							<div class="custom-control custom-checkbox">
 								<input type="checkbox" class="custom-control-input" id="audio-checkbox" v-model="audio.isEnabled">
