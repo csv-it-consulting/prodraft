@@ -4,6 +4,12 @@ const Game = require('./classes/Game');
 const createServer = require('./create-server');
 const dayjs = require('dayjs');
 
+const onGameStateChange = game => {
+	io.to(`game.${game.getId()}`).emit('game-state', game.getState());
+
+	GameList.update(game.getId());
+};
+
 function validateGameCreation(input) {
 	if(!Array.isArray(input.teams) || input.teams.length !== 2 || typeof input.teams[0] !== 'string' || typeof input.teams[1] !== 'string') {
 		return false;
@@ -26,7 +32,7 @@ function createGame(req, res) {
 		res.end();
 	}
 
-	const game = new Game(input.teams, ChampionList.get(), game => io.to(`game.${game.getId()}`).emit('game-state', game.getState()));
+	const game = new Game(input.teams, ChampionList.get(), onGameStateChange);
 	const teams = game.getTeams();
 
 	GameList.add(game.getId(), game);
@@ -67,10 +73,8 @@ function onGameAction(socket, data) {
 	game.act(socket.handshake.query.team, data.action, data.value);
 }
 
-const io = createServer(createGame, onJoinGame, onGameAction);
-
 setInterval(() => ChampionList.update(), 3600000); // 1 hour
-ChampionList.update();
+ChampionList.update(champions => GameList.init(champions, onGameStateChange));
 
 setInterval(() => {
 	const expired = GameList.flushExpired();
@@ -79,3 +83,5 @@ setInterval(() => {
 		io.to(`game.${id}`).emit('game-expired');
 	}
 }, 3600000); // 1 hour
+
+const io = createServer(createGame, onJoinGame, onGameAction);
