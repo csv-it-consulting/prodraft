@@ -20,7 +20,7 @@ module.exports = class GameList {
 
 		await this.client.query(fs.readFileSync('init.sql').toString());
 
-		const res = await this.client.query('select uuid, state from prodraft.games');
+		const res = await this.client.query('select uuid, state from public.games');
 
 		for(let gameData of res.rows) {
 			this.games[gameData.uuid] = Game.unserialize(gameData.uuid, gameData.state, champions, onStateChange);
@@ -30,13 +30,13 @@ module.exports = class GameList {
 	static async update(id) {
 		const game = this.games[id];
 
-		await this.client.query('update prodraft.games set state = $1 where uuid = $2', [game.serialize(), game.getId()]);
+		await this.client.query('update public.games set state = $1 where uuid = $2', [game.serialize(), game.getId()]);
 	}
 
 	static async insert(id) {
 		const game = this.games[id];
 
-		await this.client.query('insert into prodraft.games (uuid, state) values ($1, $2)', [game.getId(), game.serialize()]);
+		await this.client.query('insert into public.games (uuid, state) values ($1, $2)', [game.getId(), game.serialize()]);
 	}
 
 	static add(id, game) {
@@ -64,7 +64,7 @@ module.exports = class GameList {
 		if(expiredIds.length > 0) {
 			const placeholders = expiredIds.map((id, index) => `\$${index + 1}`).join(',');
 
-			await this.client.query(`delete from prodraft.games where uuid in(${placeholders})`, expiredIds);
+			await this.client.query(`delete from public.games where uuid in(${placeholders})`, expiredIds);
 		}
 
 		return expiredIds;

@@ -76,8 +76,8 @@ function onGameAction(socket, data) {
 setInterval(() => ChampionList.update(), 3600000); // 1 hour
 ChampionList.update(champions => GameList.init(champions, onGameStateChange));
 
-setInterval(() => {
-	const expired = GameList.flushExpired();
+setInterval(async () => {
+	const expired = await GameList.flushExpired();
 
 	for(let id of expired) {
 		io.to(`game.${id}`).emit('game-expired');
