@@ -8,15 +8,15 @@ module.exports = class GameList {
 	static client = null;
 
 	static async init(champions, onStateChange) {
-		this.client = new Client;
-
 		const config = process.env.CA_BUNDLE_LOCATION ? [{
 			ssl: {
 				ca: fs.readFileSync(process.env.CA_BUNDLE_LOCATION).toString(),
 			},
 		}] : [];
 
-		await this.client.connect(...config);
+		this.client = new Client(...config);
+
+		await this.client.connect();
 
 		await this.client.query(fs.readFileSync('init.sql').toString());
 
