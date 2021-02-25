@@ -10,6 +10,7 @@ module.exports = class GameList {
 	static async init(champions, onStateChange) {
 		const config = process.env.CA_BUNDLE_LOCATION ? [{
 			ssl: {
+				rejectUnauthorized: false,
 				ca: fs.readFileSync(process.env.CA_BUNDLE_LOCATION).toString(),
 			},
 		}] : [];
