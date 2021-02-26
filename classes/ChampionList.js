@@ -4,8 +4,8 @@ const fetch = require('node-fetch');
 module.exports = class ChampionList {
 	static champions = [];
 
-	static update(callback) {
-		fetch('https://ddragon.leagueoflegends.com/api/versions.json')
+	static update() {
+		return fetch('https://ddragon.leagueoflegends.com/api/versions.json')
 			.then(res => res.json())
 			.then(versions => fetch(`http://ddragon.leagueoflegends.com/cdn/${versions[0]}/data/en_US/champion.json`))
 			.then(res => res.json())
@@ -20,8 +20,7 @@ module.exports = class ChampionList {
 				};
 
 				return new Champion(champion.version, champion.id, champion.name, champion.splash, sprite, champion.tags);
-			}))
-			.then(callback);
+			}));
 	}
 
 	static get() {

@@ -7,7 +7,7 @@ module.exports = class GameList {
 	static games = {};
 	static client = null;
 
-	static async init(champions, onStateChange) {
+	static init(champions, onStateChange) {
 		const config = process.env.PGCA ? [{
 			ssl: {
 				ca: process.env.PGCA,
@@ -16,15 +16,14 @@ module.exports = class GameList {
 
 		this.client = new Client(...config);
 
-		await this.client.connect();
-
-		await this.client.query(fs.readFileSync('init.sql').toString());
-
-		const res = await this.client.query('select id, state from public.games');
-
-		for(let gameData of res.rows) {
-			this.games[gameData.id] = Game.unserialize(gameData.id, gameData.state, champions, onStateChange);
-		}
+		return this.client.connect()
+			.then(() => this.client.query(fs.readFileSync('init.sql').toString()))
+			.then(() => this.client.query('select id, state from public.games'))
+			.then(res => {
+				for(let gameData of res.rows) {
+					this.games[gameData.id] = Game.unserialize(gameData.id, gameData.state, champions, onStateChange);
+				}
+			});
 	}
 
 	static async update(id) {

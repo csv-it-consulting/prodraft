@@ -73,9 +73,6 @@ function onGameAction(socket, data) {
 	game.act(socket.handshake.query.team, data.action, data.value);
 }
 
-setInterval(() => ChampionList.update(), 3600000); // 1 hour
-ChampionList.update(champions => GameList.init(champions, onGameStateChange));
-
 setInterval(async () => {
 	const expired = await GameList.flushExpired();
 
@@ -84,4 +81,10 @@ setInterval(async () => {
 	}
 }, 3600000); // 1 hour
 
-const io = createServer(createGame, onJoinGame, onGameAction);
+setInterval(() => ChampionList.update(), 3600000); // 1 hour
+
+let io = null;
+
+ChampionList.update()
+	.then(champions => GameList.init(champions, onGameStateChange))
+	.then(() => io = createServer(createGame, onJoinGame, onGameAction));
