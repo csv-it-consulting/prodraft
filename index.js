@@ -54,7 +54,7 @@ function onJoinGame(socket) {
 	}
 
 	socket.emit('champions', ChampionList.get());
-	socket.emit('server-time', Number(dayjs()))
+	socket.emit('server-time', Number(dayjs()));
 	socket.emit('assign-team', game.getTeamIndexById(socket.handshake.query.team));
 	socket.emit('game-state', game.getState());
 	socket.join(`game.${game.getId()}`);

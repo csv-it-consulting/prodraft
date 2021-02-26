@@ -6,13 +6,14 @@
   "dependencies": {
     "@sentry/node": "^6.1.0",
     "@sentry/tracing": "^6.1.0",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "dayjs": "^1.10.4",
     "express": "^4.17.1",
+    "nanoid": "^3.1.20",
     "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
-    "socket.io": "^3.1.1",
-    "uuid": "^8.3.2"
+    "socket.io": "^3.1.1"
   },
   "keywords": [],
   "author": "CSV IT Consulting",
@@ -20,7 +21,6 @@
   "devDependencies": {
     "@sentry/vue": "^6.1.0",
     "axios": "^0.21.1",
-    "body-parser": "^1.19.0",
     "bootstrap": "^4.6.0",
     "clipboard": "^2.0.6",
     "howler": "^2.2.1",

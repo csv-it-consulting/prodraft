@@ -1,14 +1,12 @@
 const dayjs = require('dayjs');
-const uuid = require('uuid');
+const { nanoid } = require('nanoid');
 
 const Team = require('./Team');
-
-const DATE_SERIALIZATION_FORMAT = 'YYYY-MM-DD hh:mm:ss.SSS Z';
 
 module.exports = class Game {
 	onStateChange = null;
 
-	id = uuid.v4();
+	id = nanoid(10);
 	champions = null;
 	teams = null;
 	expiration = dayjs().add(24, 'hour');
@@ -55,24 +53,23 @@ module.exports = class Game {
 			ready: this.ready,
 			order: this.order,
 			current: this.current,
-			expiration: this.expiration.format(DATE_SERIALIZATION_FORMAT),
-			roundExpiration: this.roundExpiration === null ? null : this.roundExpiration.format(DATE_SERIALIZATION_FORMAT),
+			expiration: Number(this.expiration),
+			roundExpiration: this.roundExpiration === null ? null : Number(this.roundExpiration),
 		};
 	}
 
-	static unserialize(id, unserialized, champions, onStateChange) {
+	static unserialize(id, data, champions, onStateChange) {
 		const game = new Game(['', ''], champions, onStateChange);
 
 		game.id = id;
-
-		game.teams = unserialized.teams.map(team => Team.unserialize(team));
+		game.teams = data.teams.map(team => Team.unserialize(team));
 
 		for(let key of ['bans', 'picks', 'hover', 'ready', 'order', 'current']) {
-			game[key] = unserialized[key];
+			game[key] = data[key];
 		}
 
-		game.expiration = dayjs(unserialized.expiration, DATE_SERIALIZATION_FORMAT);
-		game.roundExpiration = unserialized.roundExpiration === null ? null : dayjs(unserialized.roundExpiration, DATE_SERIALIZATION_FORMAT);
+		game.expiration = dayjs(data.expiration);
+		game.roundExpiration = data.roundExpiration === null ? null : dayjs(data.roundExpiration);
 
 		setImmediate(() => game.resumeRound());
 

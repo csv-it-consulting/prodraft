@@ -4,12 +4,9 @@ $do$
 		if not exists(select from pg_tables where schemaname = 'public' and tablename = 'games') then
 			create table public.games
 			(
-				id    serial,
-				uuid  uuid not null,
+				id    char(10) primary key,
 				state json not null
 			);
-
-			create index uuid_UNIQUE on public.games (uuid);
 		end if;
 	end
 $do$;

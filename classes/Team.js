@@ -1,7 +1,7 @@
-const uuid = require('uuid');
+const { nanoid } = require('nanoid');
 
 module.exports = class Team {
-	id = uuid.v4();
+	id = nanoid(10);
 	name = null;
 
 	serialize() {
@@ -11,9 +11,9 @@ module.exports = class Team {
 		};
 	}
 
-	static unserialize(unserialized) {
-		const team = new Team(unserialized.name);
-		team.id = unserialized.id;
+	static unserialize(data) {
+		const team = new Team(data.name);
+		team.id = data.id;
 
 		return team;
 	}
