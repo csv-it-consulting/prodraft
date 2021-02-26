@@ -19,6 +19,8 @@ module.exports = class Game {
 	hover = [null, null];
 	ready = [false, false];
 
+	lastHover = null;
+
 	order = [
 		[0, 'ban'],
 		[1, 'ban'],
@@ -157,6 +159,10 @@ module.exports = class Game {
 	}
 
 	canAct(id, action, value) {
+		if(action === 'hover' && this.lastHover !== null && this.lastHover.diff() > -30) {
+			return false;
+		}
+
 		if(value === null) {
 			return false;
 		}
@@ -177,6 +183,10 @@ module.exports = class Game {
 			return false;
 		}
 
+		if(action === 'hover' && this.hover[teamIndex] === value) {
+			return false;
+		}
+
 		return currentRound[0] === teamIndex && ['hover', currentRound[1]].includes(action);
 	}
 
@@ -192,6 +202,7 @@ module.exports = class Game {
 			case 'pick':
 				this[action + 's'][teamIndex].push(value);
 				this.hover[teamIndex] = null;
+				this.lastHover = null;
 				++this.current;
 
 				if(this.order[this.current][1] === 'done') {
@@ -203,6 +214,8 @@ module.exports = class Game {
 				break;
 
 			case 'hover':
+				this.lastHover = dayjs();
+			// noinspection FallThroughInSwitchStatementJS
 			case 'ready':
 				this[action][teamIndex] = value;
 
