@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import VueToasted from 'vue-toasted';
 import * as Sentry from '@sentry/vue';
 import { Integrations as SentryIntegrations } from '@sentry/tracing';
 
@@ -11,6 +12,8 @@ Sentry.init({
 	logErrors: true,
 	release: process.env.MIX_COMMIT_HASH,
 });
+
+Vue.use(VueToasted);
 
 // Extend Vue
 const App = Vue.extend({ render: renderer => renderer(Main) });

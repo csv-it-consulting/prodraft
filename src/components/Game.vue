@@ -177,6 +177,8 @@ export default {
 			timer: null,
 			timerFrame: null,
 
+			disconnectedToast: null,
+
 			mobile: false,
 		};
 	},
@@ -188,6 +190,19 @@ export default {
 			this.gameId = matches.groups.game;
 			this.teamId = matches.groups.team || null;
 			this.socket = io({ transports: ['websocket', 'polling'], query: { game: this.gameId, team: this.teamId } });
+
+			this.socket.on('connect', () => {
+				if(this.disconnectedToast !== null) {
+					this.disconnectedToast.goAway();
+
+					this.$toasted.success('Reconnected!', { duration: 3000 }).goAway();
+				}
+			});
+			this.socket.on('disconnect', () => {
+				this.disconnectedToast?.goAway();
+
+				this.disconnectedToast = this.$toasted.error('Attempting to reconnect...');
+			});
 
 			this.socket.on('game-state', state => {
 				this.state = state;
