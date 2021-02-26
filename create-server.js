@@ -26,11 +26,7 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 
 	const mixManifest = require(path.join(__dirname, 'public', 'mix-manifest.json'));
 
-	app.get([
-		'/',
-		'/g/:game',
-		'/g/:game/t/:team',
-	], (req, res) => {
+	app.get('/', (req, res) => {
 		fs.readFile(path.join(__dirname, 'public', 'index.html'), (error, data) => {
 			if(error) {
 				res.sendStatus(500);

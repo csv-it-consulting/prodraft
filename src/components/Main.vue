@@ -79,7 +79,7 @@ export default {
 	},
 
 	created() {
-		if(window.location.pathname.match(/\/g\/([^\/]+)/)) {
+		if(window.location.hash.match(/^#?(?<game>[-\w]{10})(?::(?<team>[-\w]{10}))?$/)) {
 			this.hasGame = true;
 		} else {
 			this.status = 'creating';
@@ -114,11 +114,11 @@ export default {
 					const game = response.data.game;
 					const teams = response.data.teams;
 
-					const spectate = `${window.location.origin}/g/${game}`;
+					const spectate = `${window.location.origin}#${game}`;
 
 					this.links.spectate = spectate;
-					this.links.teams[0] = `${spectate}/t/${teams[0]}`;
-					this.links.teams[1] = `${spectate}/t/${teams[1]}`;
+					this.links.teams[0] = `${spectate}:${teams[0]}`;
+					this.links.teams[1] = `${spectate}:${teams[1]}`;
 
 					this.status = 'complete';
 				})

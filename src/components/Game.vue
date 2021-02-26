@@ -125,7 +125,7 @@ export default {
 
 	methods: {
 		connect() {
-			const matches = window.location.pathname.match(/\/g\/(?<game>[^\/]+)(?:\/t\/(?<team>[^\/]+))?/);
+			const matches = window.location.hash.match(/^#?(?<game>[-\w]{10})(?::(?<team>[-\w]{10}))?$/);
 
 			this.gameId = matches.groups.game;
 			this.teamId = matches.groups.team || null;
