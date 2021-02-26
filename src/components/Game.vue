@@ -50,7 +50,6 @@
 </template>
 <script>
 import io from 'socket.io-client';
-import qs from 'qs';
 import dayjs from 'dayjs';
 import { Howl, Howler } from 'howler';
 import ChampionBanList from './ChampionBanList';
@@ -126,10 +125,10 @@ export default {
 
 	methods: {
 		connect() {
-			const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
+			const matches = window.location.pathname.match(/\/g\/(?<game>[^\/]+)(?:\/t\/(?<team>[^\/]+))?/);
 
-			this.gameId = query.game;
-			this.teamId = query.team || null;
+			this.gameId = matches.groups.game;
+			this.teamId = matches.groups.team || null;
 			this.socket = io({ transports: ['websocket', 'polling'], query: { game: this.gameId, team: this.teamId } });
 
 			this.socket.on('game-state', state => {

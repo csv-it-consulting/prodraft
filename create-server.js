@@ -26,7 +26,11 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 
 	const mixManifest = require(path.join(__dirname, 'public', 'mix-manifest.json'));
 
-	app.get('/', (req, res) => {
+	app.get([
+		'/',
+		'/g/:game',
+		'/g/:game/t/:team',
+	], (req, res) => {
 		fs.readFile(path.join(__dirname, 'public', 'index.html'), (error, data) => {
 			if(error) {
 				res.sendStatus(500);
@@ -42,6 +46,7 @@ module.exports = function createServer(createGame, onJoinGame, onGameAction) {
 	app.use(bodyParser.json());
 
 	app.post('/game', createGame);
+
 	io.on('connection', function (socket) {
 		onJoinGame(socket);
 

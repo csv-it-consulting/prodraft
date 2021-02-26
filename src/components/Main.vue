@@ -67,7 +67,6 @@
 <script>
 import Clipboard from 'clipboard';
 import axios from 'axios';
-import qs from 'qs';
 import Game from './Game';
 
 export default {
@@ -80,9 +79,7 @@ export default {
 	},
 
 	created() {
-		const query = qs.parse(window.location.search, { ignoreQueryPrefix: true });
-
-		if(query.game) {
+		if(window.location.pathname.match(/\/g\/([^\/]+)/)) {
 			this.hasGame = true;
 		} else {
 			this.status = 'creating';
@@ -117,9 +114,11 @@ export default {
 					const game = response.data.game;
 					const teams = response.data.teams;
 
-					this.links.spectate = window.location.origin + qs.stringify({ game }, { addQueryPrefix: true });
-					this.links.teams[0] = window.location.origin + qs.stringify({ game, team: teams[0] }, { addQueryPrefix: true });
-					this.links.teams[1] = window.location.origin + qs.stringify({ game, team: teams[1] }, { addQueryPrefix: true });
+					const spectate = `${window.location.origin}/g/${game}`;
+
+					this.links.spectate = spectate;
+					this.links.teams[0] = `${spectate}/t/${teams[0]}`;
+					this.links.teams[1] = `${spectate}/t/${teams[1]}`;
 
 					this.status = 'complete';
 				})
