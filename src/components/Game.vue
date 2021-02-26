@@ -1,5 +1,56 @@
 <template>
-	<div class="d-flex flex-column h-100">
+	<div v-if="mobile" class="d-flex flex-column h-100">
+		<div v-if="state !== null && champions !== null" class="d-flex flex-column h-100">
+			<div class="row">
+				<div class="col-6 bg-info d-flex justify-content-start align-items-baseline">
+					<h1 class="d-inline-block text-truncate">{{ state.teams[0].name }}</h1>
+				</div>
+				<div class="col-6 bg-danger d-flex justify-content-end align-items-baseline">
+					<h1 class="d-inline-block text-truncate">{{ state.teams[1].name }}</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-5 bg-info d-flex justify-content-start align-items-baseline">
+					<h5 class="d-inline-block text-nowrap">{{ getTeamAction(0) }}</h5>
+				</div>
+				<div class="col-2 d-flex justify-content-center" :class="['ready', 'done'].includes(currentAct) ? 'blue-red-gradient' : (currentTeam === 0 ? 'blue-act-gradient' : 'red-act-gradient')">
+					<h4 class="mb-0">{{ timer || '&nbsp;' }}</h4>
+				</div>
+				<div class="col-5 bg-danger d-flex justify-content-end align-items-baseline">
+					<h5 class="d-inline-block text-nowrap">{{ getTeamAction(1) }}</h5>
+				</div>
+			</div>
+			<div class="row">
+				<champion-mobile-list :champions="champions" :selected="state.bans[0]" :team="0" :hovered="getHovered(0, 'ban')" :active="getActive(0, 'ban')" type="ban" class="col-6 bg-info py-2"></champion-mobile-list>
+				<champion-mobile-list :champions="champions" :selected="state.bans[1]" :team="1" :hovered="getHovered(1, 'ban')" :active="getActive(1, 'ban')" type="ban" class="col-6 bg-danger py-2"></champion-mobile-list>
+			</div>
+			<div class="row">
+				<div class="col-6 bg-info">
+					<span class="horizontal-separator d-block"></span>
+				</div>
+				<div class="col-6 bg-danger">
+					<span class="horizontal-separator d-block"></span>
+				</div>
+			</div>
+			<div class="row">
+				<champion-mobile-list :champions="champions" :selected="state.picks[0]" :team="0" :hovered="getHovered(0, 'pick')" :active="getActive(0, 'pick')" type="pick" class="col-6 bg-info py-2"></champion-mobile-list>
+				<champion-mobile-list :champions="champions" :selected="state.picks[1]" :team="1" :hovered="getHovered(1, 'pick')" :active="getActive(1, 'pick')" type="pick" class="col-6 bg-danger py-2"></champion-mobile-list>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="px-3 pt-3">
+						<button type="button" class="rounded-0 btn w-100 h-100" :class="['ready', 'done'].includes(currentAct) ? 'btn-secondary' : (currentTeam === 0 ? 'btn-info' : 'btn-danger')" :disabled="!canAct" @click="lock">{{ actButtonText }}</button>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<champion-picker ref="championPicker" :champions="champions" :banned-ids="bannedChampionIds" :picked-ids="pickedChampionIds" :disabled="team === null || ['ready', 'done'].includes(currentAct)" v-model="input.champion" mobile></champion-picker>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div v-else class="d-flex flex-column h-100">
 		<div v-if="state !== null && champions !== null" class="d-flex flex-column h-100">
 			<div class="row game-header">
 				<div class="col-5 bg-info d-flex justify-content-between align-items-baseline">
@@ -54,12 +105,17 @@ import dayjs from 'dayjs';
 import { Howl, Howler } from 'howler';
 import ChampionBanList from './ChampionBanList';
 import ChampionPickList from './ChampionPickList';
+import ChampionMobileList from './ChampionMobileList';
 import ChampionPicker from './ChampionPicker';
 
 Howler.autoSuspend = false;
 
 export default {
-	components: { ChampionBanList, ChampionPickList, ChampionPicker },
+	beforeDestroy() {
+		window.removeEventListener('resize', this.resizeHandler, false);
+	},
+
+	components: { ChampionBanList, ChampionPickList, ChampionMobileList, ChampionPicker },
 
 	computed: {
 		actButtonText() {
@@ -120,6 +176,8 @@ export default {
 			timerOffset: null,
 			timer: null,
 			timerFrame: null,
+
+			mobile: false,
 		};
 	},
 
@@ -217,6 +275,10 @@ export default {
 			}
 		},
 
+		resizeHandler() {
+			this.mobile = window.innerHeight < 800 || window.innerWidth < 1100;
+		},
+
 		setAudioVolume() {
 			Howler.volume(this.audio.volume);
 
@@ -234,6 +296,12 @@ export default {
 
 				this.audio.isSetup = true;
 			}
+		},
+
+		setupResizeHandler() {
+			window.addEventListener('resize', this.resizeHandler, false);
+
+			this.resizeHandler();
 		},
 
 		startTimer() {
@@ -264,6 +332,8 @@ export default {
 		this.connect();
 
 		this.setupAudio();
+
+		this.setupResizeHandler();
 	},
 
 	watch: {
@@ -307,5 +377,10 @@ export default {
 
 .game-footer {
 	height: 80px;
+}
+</style>
+<style scoped>
+.horizontal-separator {
+	border-bottom: 5px solid #444444;
 }
 </style>
