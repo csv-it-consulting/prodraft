@@ -17,3 +17,5 @@ const App = Vue.extend({ render: renderer => renderer(Main) });
 
 // Instantiate the application
 (new App).$mount('#main');
+
+window.addEventListener('hashchange', () => window.location.reload(), true);
