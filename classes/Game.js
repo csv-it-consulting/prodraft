@@ -1,12 +1,12 @@
 const dayjs = require('dayjs');
-const { nanoid } = require('nanoid');
 
+const Id = require('./Id');
 const Team = require('./Team');
 
 module.exports = class Game {
 	onStateChange = null;
 
-	id = nanoid(10);
+	id = Id.generate();
 	champions = null;
 	teams = null;
 	expiration = dayjs().add(24, 'hour');

@@ -1,7 +1,7 @@
-const { nanoid } = require('nanoid');
+const Id = require('./Id');
 
 module.exports = class Team {
-	id = nanoid(10);
+	id = Id.generate();
 	name = null;
 
 	serialize() {

@@ -11,6 +11,7 @@
     "dayjs": "^1.10.4",
     "express": "^4.17.1",
     "nanoid": "^3.1.20",
+    "nanoid-dictionary": "^4.2.0",
     "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
     "socket.io": "^3.1.1"
