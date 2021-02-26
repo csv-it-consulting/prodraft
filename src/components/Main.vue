@@ -79,7 +79,7 @@ export default {
 	},
 
 	created() {
-		if(window.location.hash.match(/^#?(?<game>[-\w]{10})(?::(?<team>[-\w]{10}))?$/)) {
+		if(window.location.hash.match(/^#?(?<game>[a-zA-Z\d]{10})(?::(?<team>[a-zA-Z\d]{10}))?$/)) {
 			this.hasGame = true;
 		} else {
 			this.status = 'creating';
