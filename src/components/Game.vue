@@ -192,12 +192,17 @@ export default {
 			this.socket.on('game-state', state => {
 				this.state = state;
 
-				if(this.state.hover[this.team] !== null) {
-					this.input.champion = this.champions.find(champion => champion.id === this.state.hover[this.team]);
-				}
+				const hoveredChampionId = this.input.champion?.id || null;
+				const serverHoveredChampionId = this.state.hover[this.team];
 
-				if(this.state.order[this.state.current][0] === this.team && this.input.champion && this.state.hover[this.team] !== this.input.champion?.id) {
-					this.hover(this.input.champion);
+				if(serverHoveredChampionId === null) {
+					if(hoveredChampionId !== null && this.state.order[this.state.current][0] === this.team) {
+						this.hover(this.input.champion);
+					}
+				} else {
+					if(hoveredChampionId !== serverHoveredChampionId) {
+						this.input.champion = this.champions.find(champion => champion.id === serverHoveredChampionId);
+					}
 				}
 
 				if(this.state.roundExpiration) {

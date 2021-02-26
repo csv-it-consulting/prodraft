@@ -126,7 +126,13 @@ export default {
 		disabled: 'clearInvalidValue',
 		bannedIds: 'clearInvalidValue',
 		pickedIds: 'clearInvalidValue',
-		value: 'clearInvalidValue',
+		value() {
+			this.clearInvalidValue();
+
+			if(this.value !== this.valueProxy) {
+				this.valueProxy = this.value;
+			}
+		},
 		valueProxy: 'clearInvalidValue',
 	},
 };
