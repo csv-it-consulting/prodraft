@@ -22,6 +22,7 @@
 </template>
 <script>
 import ChampionIcon from './ChampionIcon';
+import escapeStringRegexp from 'escape-string-regexp';
 
 export default {
 	components: { ChampionIcon },
@@ -38,11 +39,12 @@ export default {
 		},
 
 		filteredChampions() {
-			const search = this.input.search.toLowerCase();
+			const search = this.input.search;
+			const searchRegexp = new RegExp(this.input.search.split('').map(escapeStringRegexp).join('.*'), 'i');
 			const tag = this.input.tag;
 
 			return this.champions.filter(champion => {
-				if(search !== '' && !champion.name.toLowerCase().includes(search)) {
+				if(search !== '' && !champion.name.match(searchRegexp)) {
 					return false;
 				}
 
