@@ -39,8 +39,23 @@ export default {
 		},
 
 		filteredChampions() {
-			const search = this.input.search;
-			const searchRegexp = new RegExp(this.input.search.split('').map(escapeStringRegexp).join('.*'), 'i');
+			const search = this.input.search.trim();
+			const searches = search.split(/\|+/g);
+
+			// noinspection SpellCheckingInspection
+			const overrides = {
+				clock: 'zilean',
+				rat: 'twitch',
+				rock: 'malphite'
+			};
+
+			for(let override in overrides) {
+				if(overrides.hasOwnProperty(override) && search.includes(override)) {
+					searches.push(overrides[override]);
+				}
+			}
+
+			const searchRegexp = new RegExp(searches.map(escapeStringRegexp).join('|').split('').map(c => c === '\\' ? c : `${c}.*`).join(''), 'i');
 			const tag = this.input.tag;
 
 			return this.champions.filter(champion => {
