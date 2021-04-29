@@ -15,7 +15,7 @@
 						<label for="blue-name">Blue Team Name</label>
 						<input type="text" class="form-control bg-info text-white" id="blue-name" v-model="input.teams[0]">
 					</div>
-					<div class="form-group">
+					<div class="form-group mb-1">
 						<label for="red-name">Red Team Name</label>
 						<input type="text" class="form-control bg-danger text-white" id="red-name" v-model="input.teams[1]">
 					</div>
