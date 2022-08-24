@@ -7,7 +7,7 @@ module.exports = class ChampionList {
 	static update() {
 		return fetch('https://ddragon.leagueoflegends.com/api/versions.json')
 			.then(res => res.json())
-			.then(versions => fetch(`http://ddragon.leagueoflegends.com/cdn/${versions[0]}/data/en_US/champion.json`))
+			.then(versions => fetch(`https://ddragon.leagueoflegends.com/cdn/${versions[0]}/data/en_US/champion.json`))
 			.then(res => res.json())
 			.then(champions => this.champions = Object.keys(champions.data).map(key => {
 				const champion = champions.data[key];
