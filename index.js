@@ -81,10 +81,12 @@ setInterval(async () => {
 	}
 }, 3600000); // 1 hour
 
-setInterval(() => ChampionList.update(), 3600000); // 1 hour
+// Ignoring errors is fine here, we'll just wait another hour to check for new champions
+setInterval(() => ChampionList.update().catch(() => {}), 3600000); // 1 hour
 
 let io = null;
 
 ChampionList.update()
 	.then(champions => GameList.init(champions, onGameStateChange))
-	.then(() => io = createServer(createGame, onJoinGame, onGameAction));
+	.then(() => io = createServer(createGame, onJoinGame, onGameAction))
+	.catch(() => console.error('Failed to load champion list and start the server.'));
