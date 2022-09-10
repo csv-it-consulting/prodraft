@@ -11,12 +11,12 @@
 					<div class="modal-title">Create a Draft</div>
 				</div>
 				<div class="modal-body">
-					<div class="form-group">
-						<label for="blue-name">Blue Team Name</label>
+					<div class="form-group mb-3">
+						<label for="blue-name" class="mb-2">Blue Team Name</label>
 						<input type="text" class="form-control bg-info text-white" id="blue-name" v-model="input.teams[0]">
 					</div>
-					<div class="form-group mb-1">
-						<label for="red-name">Red Team Name</label>
+					<div class="form-group">
+						<label for="red-name" class="mb-2">Red Team Name</label>
 						<input type="text" class="form-control bg-danger text-white" id="red-name" v-model="input.teams[1]">
 					</div>
 				</div>
@@ -29,33 +29,27 @@
 				<div class="modal-body" v-else-if="status === 'error'">Failed to create draft.</div>
 				<div class="modal-body" v-else-if="status === 'complete'">
 					<div class="form-group">
-						<label for="spectate-link">Spectate Link</label>
-						<div class="input-group">
+						<label for="spectate-link" class="mb-2">Spectate Link</label>
+						<div class="input-group mb-3">
 							<input class="form-control bg-secondary border-0 text-white" :value="links.spectate" readonly id="spectate-link">
-							<div class="input-group-append">
-								<button type="button" class="btn btn-outline-secondary text-white" data-clipboard-target="#spectate-link">Copy</button>
-								<a :href="links.spectate" target="_blank" class="btn btn-outline-secondary text-white">Go</a>
-							</div>
+							<button type="button" class="btn btn-outline-secondary text-white" data-clipboard-target="#spectate-link">Copy</button>
+							<a :href="links.spectate" target="_blank" class="btn btn-outline-secondary text-white">Go</a>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="blue-link">{{ input.teams[0] }} Captain Link</label>
-						<div class="input-group">
+						<label for="blue-link" class="mb-2">{{ input.teams[0] }} Captain Link</label>
+						<div class="input-group mb-3">
 							<input class="form-control bg-info border-0 text-white" :value="links.teams[0]" readonly id="blue-link">
-							<div class="input-group-append">
-								<button type="button" class="btn btn-outline-info text-white" data-clipboard-target="#blue-link">Copy</button>
-								<a :href="links.teams[0]" target="_blank" class="btn btn-outline-info text-white">Go</a>
-							</div>
+							<button type="button" class="btn btn-outline-info text-white" data-clipboard-target="#blue-link">Copy</button>
+							<a :href="links.teams[0]" target="_blank" class="btn btn-outline-info text-white">Go</a>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="red-link">{{ input.teams[1] }} Captain Link</label>
-						<div class="input-group">
+						<label for="red-link" class="mb-2">{{ input.teams[1] }} Captain Link</label>
+						<div class="input-group mb-3">
 							<input class="form-control bg-danger border-0 text-white" :value="links.teams[1]" readonly id="red-link">
-							<div class="input-group-append">
-								<button type="button" class="btn btn-outline-danger text-white" data-clipboard-target="#red-link">Copy</button>
-								<a :href="links.teams[1]" target="_blank" class="btn btn-outline-danger text-white">Go</a>
-							</div>
+							<button type="button" class="btn btn-outline-danger text-white" data-clipboard-target="#red-link">Copy</button>
+							<a :href="links.teams[1]" target="_blank" class="btn btn-outline-danger text-white">Go</a>
 						</div>
 					</div>
 					<p>These links will expire in 24 hours.</p>

@@ -1,7 +1,7 @@
 <template>
 	<div class="d-flex justify-content-center text-center">
 		<div class="card bg-transparent border-0 py-3 px-2">
-			<div class="row" :class="team === 0 ? 'flex-row-reverse' : 'flex-row'">
+			<div class="d-flex" :class="team === 0 ? 'flex-row-reverse' : 'flex-row'">
 				<template v-for="index in 5">
 					<div class="bg-secondary mx-2" v-if="index <= bannedChampions.length && bannedChampions[index - 1].data !== null">
 						<champion-icon class="d-flex justify-content-center card-img rounded-0" :class="{ 'champion-banned': !bannedChampions[index - 1].hovered, 'champion-active': index - 1 === activeIndex }" :champion="bannedChampions[index - 1].data" :size="size"></champion-icon>
@@ -9,7 +9,7 @@
 					<div v-else class="bg-secondary mx-2" :style="`width: ${size}px; height: ${size}px;`">
 						<div class="h-100 w-100" :class="{ 'champion-banned': bannedChampions[index - 1] && !bannedChampions[index - 1].hovered, 'champion-active': index - 1 === activeIndex }"></div>
 					</div>
-					<span v-if="index === 3" class="vertical-separator mx-2"></span>
+					<span v-if="index === 3" class="vertical-separator mx-2">&nbsp;</span>
 				</template>
 			</div>
 		</div>

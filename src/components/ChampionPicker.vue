@@ -3,11 +3,11 @@
 		<div class="row px-3 picker-toolbar">
 			<div class="col-12">
 				<div class="input-group h-100">
-					<div class="input-group-prepend" v-if="!mobile">
+					<template v-if="!mobile">
 						<button type="button" class="btn btn-secondary" :class="{ active: input.tag === null }" @click="filterTag(null)">All</button>
 						<button type="button" class="btn btn-secondary" v-for="tag in allTags" :class="{ active: input.tag === tag }" @click="filterTag(tag)">{{ tag }}</button>
-					</div>
-					<input type="text" class="form-control h-100" placeholder="Search..." v-model="input.search">
+					</template>
+					<input type="text" class="form-control h-100 bg-white text-black" placeholder="Search..." v-model="input.search">
 				</div>
 			</div>
 		</div>
@@ -63,11 +63,7 @@ export default {
 					return false;
 				}
 
-				if(tag !== null && !champion.tags.includes(tag)) {
-					return false;
-				}
-
-				return true;
+				return !(tag !== null && !champion.tags.includes(tag));
 			}).sort((a, b) => a.name > b.name ? 1 : -1);
 		},
 	},
