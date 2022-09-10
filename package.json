@@ -21,7 +21,7 @@
   "license": "proprietary",
   "devDependencies": {
     "@sentry/vue": "^6.1.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootstrap": "^4.6.0",
     "clipboard": "^2.0.6",
     "escape-string-regexp": "^1.0.5",
