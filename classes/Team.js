@@ -1,7 +1,5 @@
-const Id = require('./Id');
-
 module.exports = class Team {
-	id = Id.generate();
+	id = null;
 	name = null;
 
 	serialize() {
@@ -12,13 +10,16 @@ module.exports = class Team {
 	}
 
 	static unserialize(data) {
-		const team = new Team(data.name);
+		const team = new Team(null, data.name);
 		team.id = data.id;
 
 		return team;
 	}
 
-	constructor(name) {
+	constructor(generateId, name) {
+		if(generateId !== null) {
+			this.id = generateId();
+		}
 		this.name = name;
 	}
 

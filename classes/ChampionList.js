@@ -1,10 +1,12 @@
 const Champion = require('./Champion');
-const fetch = require('node-fetch');
+const nodeFetch = import('node-fetch');
 
 module.exports = class ChampionList {
 	static champions = [];
 
-	static update() {
+	static async update() {
+		const fetch = (await nodeFetch).default;
+
 		return fetch('https://ddragon.leagueoflegends.com/api/versions.json')
 			.then(res => res.json())
 			.then(versions => fetch(`http://ddragon.leagueoflegends.com/cdn/${versions[0]}/data/en_US/champion.json`))

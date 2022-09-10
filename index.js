@@ -3,6 +3,10 @@ const GameList = require('./classes/GameList');
 const Game = require('./classes/Game');
 const createServer = require('./create-server');
 const dayjs = require('dayjs');
+const nanoid = import('nanoid');
+const dictionary = require('nanoid-dictionary');
+
+const generateId = (async () => (await nanoid).customAlphabet(dictionary.alphanumeric, 10))();
 
 const onGameStateChange = game => {
 	io.to(`game.${game.getId()}`).emit('game-state', game.getState());
@@ -25,14 +29,14 @@ function validateGameCreation(input) {
 	};
 }
 
-function createGame(req, res) {
+async function createGame(req, res) {
 	const input = validateGameCreation(req.body);
 
 	if(!input) {
 		res.end();
 	}
 
-	const game = new Game(input.teams, ChampionList.get(), onGameStateChange);
+	const game = new Game(await generateId, input.teams, ChampionList.get(), onGameStateChange);
 	const teams = game.getTeams();
 
 	GameList.add(game.getId(), game);
@@ -87,4 +91,4 @@ let io = null;
 
 ChampionList.update()
 	.then(champions => GameList.init(champions, onGameStateChange))
-	.then(() => io = createServer(createGame, onJoinGame, onGameAction));
+	.then(async () => io = createServer(await createGame, onJoinGame, onGameAction));

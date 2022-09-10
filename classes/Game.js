@@ -1,12 +1,11 @@
 const dayjs = require('dayjs');
 
-const Id = require('./Id');
 const Team = require('./Team');
 
 module.exports = class Game {
 	onStateChange = null;
 
-	id = Id.generate();
+	id = null;
 	champions = null;
 	teams = null;
 	expiration = dayjs().add(24, 'hour');
@@ -61,7 +60,7 @@ module.exports = class Game {
 	}
 
 	static unserialize(id, data, champions, onStateChange) {
-		const game = new Game(['', ''], champions, onStateChange);
+		const game = new Game(null, ['', ''], champions, onStateChange);
 
 		game.id = id;
 		game.teams = data.teams.map(team => Team.unserialize(team));
@@ -78,11 +77,14 @@ module.exports = class Game {
 		return game;
 	}
 
-	constructor(teamNames, champions, onStateChange) {
+	constructor(generateId, teamNames, champions, onStateChange) {
+		if(generateId !== null) {
+			this.id = generateId();
+		}
 		this.champions = champions;
 		this.teams = [
-			new Team(teamNames[0]),
-			new Team(teamNames[1]),
+			new Team(generateId, teamNames[0]),
+			new Team(generateId, teamNames[1]),
 		];
 
 		this.onStateChange = onStateChange;
