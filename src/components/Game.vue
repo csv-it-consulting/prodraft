@@ -103,10 +103,13 @@
 import io from 'socket.io-client';
 import dayjs from 'dayjs';
 import { Howl, Howler } from 'howler';
+import { useToast } from 'vue-toastification';
 import ChampionBanList from './ChampionBanList';
 import ChampionPickList from './ChampionPickList';
 import ChampionMobileList from './ChampionMobileList';
 import ChampionPicker from './ChampionPicker';
+
+import 'vue-toastification/dist/index.css';
 
 Howler.autoSuspend = false;
 
@@ -191,17 +194,26 @@ export default {
 			this.teamId = matches.groups.team || null;
 			this.socket = io({ transports: ['websocket', 'polling'], query: { game: this.gameId, team: this.teamId } });
 
+			const toast = useToast();
+
 			this.socket.on('connect', () => {
 				if(this.disconnectedToast !== null) {
-					this.disconnectedToast.goAway();
+					toast.dismiss(this.disconnectedToast);
 
-					this.$toasted.success('Reconnected!', { duration: 3000 }).goAway();
+					toast.success('Reconnected!', { timeout: 3000 });
 				}
 			});
 			this.socket.on('disconnect', () => {
-				this.disconnectedToast?.goAway();
+				if(this.disconnectedToast !== null) {
+					toast.dismiss(this.disconnectedToast);
+				}
 
-				this.disconnectedToast = this.$toasted.error('Attempting to reconnect...');
+				this.disconnectedToast = toast.error('Attempting to reconnect...', {
+					timeout: false,
+					closeButton: false,
+					closeOnClick: false,
+					draggable: false,
+				});
 			});
 
 			this.socket.on('game-state', state => {
