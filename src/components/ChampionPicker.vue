@@ -46,7 +46,7 @@ export default {
 			const overrides = {
 				clock: 'zilean',
 				rat: 'twitch',
-				rock: 'malphite'
+				rock: 'malphite',
 			};
 
 			for(let override in overrides) {
@@ -75,7 +75,7 @@ export default {
 				tag: null,
 			},
 
-			valueProxy: this.value || null,
+			valueProxy: this.modelValue || null,
 		};
 	},
 
@@ -98,7 +98,7 @@ export default {
 		select(champion) {
 			if(champion === null || (!this.disabled && !this.bannedIds.includes(champion.id) && !this.pickedIds.includes(champion.id))) {
 				this.valueProxy = champion;
-				this.$emit('input', champion);
+				this.$emit('update:modelValue', champion);
 			}
 		},
 	},
@@ -129,7 +129,7 @@ export default {
 			required: true,
 		},
 
-		value: {
+		modelValue: {
 			type: Object,
 			default: null,
 		},
@@ -139,11 +139,11 @@ export default {
 		disabled: 'clearInvalidValue',
 		bannedIds: 'clearInvalidValue',
 		pickedIds: 'clearInvalidValue',
-		value() {
+		modelValue() {
 			this.clearInvalidValue();
 
-			if(this.value !== this.valueProxy) {
-				this.valueProxy = this.value;
+			if(this.modelValue !== this.valueProxy) {
+				this.valueProxy = this.modelValue;
 			}
 		},
 		valueProxy: 'clearInvalidValue',
