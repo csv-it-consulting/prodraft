@@ -110,7 +110,8 @@ async function attemptStartServer() {
 		console.error('Failed to load champion list and start the server.')
 	}
 }
-await attemptStartServer();
+
+(async () => await attemptStartServer())();
 if(io === null) {
 	startServerInterval = setInterval(attemptStartServer, 10000); // 10 seconds
 }
