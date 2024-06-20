@@ -96,15 +96,15 @@ async function startServer() {
 	return createServer(createGame, onJoinGame, onGameAction);
 }
 
-let startServerInerval = null;
+let startServerInterval = null;
 let io = null;
 async function attemptStartServer() {
 	try {
 		io = await startServer();
 
-		if(startServerInerval !== null) {
-			clearInterval(startServerInerval);
-			startServerInerval = null;
+		if(startServerInterval !== null) {
+			clearInterval(startServerInterval);
+			startServerInterval = null;
 		}
 	} catch (e) {
 		console.error('Failed to load champion list and start the server.')
@@ -112,5 +112,5 @@ async function attemptStartServer() {
 }
 await attemptStartServer();
 if(io === null) {
-	startServerInerval = setInterval(attemptStartServer, 10000); // 10 seconds
+	startServerInterval = setInterval(attemptStartServer, 10000); // 10 seconds
 }
