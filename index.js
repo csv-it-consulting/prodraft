@@ -88,9 +88,29 @@ setInterval(async () => {
 // Ignoring errors is fine here, we'll just wait another hour to check for new champions
 setInterval(() => ChampionList.update().catch(() => {}), 3600000); // 1 hour
 
-let io = null;
+async function startServer() {
+	const champions = await ChampionList.update();
 
-ChampionList.update()
-	.then(champions => GameList.init(champions, onGameStateChange))
-	.then(async () => io = createServer(await createGame, onJoinGame, onGameAction))
-	.catch(() => console.error('Failed to load champion list and start the server.'));
+	await GameList.init(champions, onGameStateChange);
+
+	return createServer(createGame, onJoinGame, onGameAction);
+}
+
+let startServerInerval = null;
+let io = null;
+async function attemptStartServer() {
+	try {
+		io = await startServer();
+
+		if(startServerInerval !== null) {
+			clearInterval(startServerInerval);
+			startServerInerval = null;
+		}
+	} catch (e) {
+		console.error('Failed to load champion list and start the server.')
+	}
+}
+await attemptStartServer();
+if(io === null) {
+	startServerInerval = setInterval(attemptStartServer, 10000); // 10 seconds
+}
